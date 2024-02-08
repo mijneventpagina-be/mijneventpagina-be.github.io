@@ -40,10 +40,6 @@ Windows
 
 3. Output will be placed in `build` folder which can then be hosted on server.
 
-## TODO
-
-- Search
-- Cart
 
 ## Credits
 
