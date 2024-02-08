@@ -1,0 +1,50 @@
+---
+kind: pipeline
+type: docker
+name: default
+trigger:
+  branch:
+  - master
+  event:
+  - push
+
+steps:
+- name: build
+  image: node:18
+  commands:
+  - npm install
+  - npm run build
+
+- name: test
+  image: node:18
+  commands:
+  - npm run test
+
+- name: deploy local
+  image: drillster/drone-rsync
+  settings:
+    hosts:
+      from_secret: web_host
+    user:
+      from_secret: web_user
+    key:
+      from_secret: web_key
+    recursive: true
+    delete: true
+    source: ./build/
+    target: /www/mijneventpagina
+
+- name: deploy remote
+  image: drillster/drone-rsync
+  settings:
+    hosts:
+      from_secret: web_host_extern
+    user:
+      from_secret: web_user
+    key:
+      from_secret: web_key
+    recursive: true
+    delete: true
+    source: ./build/
+    target: /www/mijneventpagina
+...
